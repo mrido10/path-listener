@@ -5,7 +5,7 @@ import (
 	"io/fs"
 	"log"
 
-	"path-listener/util"
+	"github.com/mrido10/path-listener/util"
 )
 
 func (p Path) readPath(pth ListPath) {

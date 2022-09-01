@@ -1,4 +1,4 @@
-module path-listener
+module github.com/mrido10/path-listener
 
 go 1.15
 

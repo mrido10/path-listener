@@ -5,7 +5,7 @@ import (
     "io/fs"
     "io/ioutil"
 
-    "path-listener/util"
+    "github.com/mrido10/path-listener/util"
 )
 
 func (p Path) validateField(pth ListPath) []fs.FileInfo{

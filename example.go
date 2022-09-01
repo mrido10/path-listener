@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"time"
 
-	"path-listener/service"
+	"github.com/mrido10/path-listener/service"
 )
 
 func main() {
