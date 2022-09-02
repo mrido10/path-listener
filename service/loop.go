@@ -18,11 +18,11 @@ type ListPath struct {
 	AutoMoveToDone bool
 }
 
-var Listen = func(list []ListPath, timeWait time.Duration) *Path {
-	return &Path{
-		List: list,
-		TimeWait: timeWait,
+var Listen = func(pth Path) *Path {
+	if pth.TimeWait.Seconds() < 5 {
+		pth.TimeWait = 5 * time.Second
 	}
+	return &pth
 }
 
 func (p Path) Loop() {

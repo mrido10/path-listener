@@ -6,16 +6,19 @@ import (
 	"io/ioutil"
 	"time"
 
-	"github.com/mrido10/path-listener/service"
+	pathListener "github.com/mrido10/path-listener/service"
 )
 
 func main() {
 	// code example
-	var listPath = []service.ListPath {
-		{FuncProcessing: readFile1, PathOrigin: "C:/testing/folder1", PathDone: "C:/testing/folder1/done", AutoMoveToDone: true},
-		{FuncProcessing: readFile2, PathOrigin: "C:/testing/folder2", AutoMoveToDone: true},
-	} 
-	service.Listen(listPath, 5 * time.Second).Loop()
+	var listener = pathListener.Path {
+		List: []pathListener.ListPath {
+			{FuncProcessing: readFile1, PathOrigin: "C:/testing/folder1", PathDone: "C:/testing/folder1/done", AutoMoveToDone: true},
+			{FuncProcessing: readFile2, PathOrigin: "C:/testing/folder2", AutoMoveToDone: true},
+		},
+		TimeWait: 5 * time.Second,
+	}
+	pathListener.Listen(listener).Loop()
 }
 
 func readFile1(file fs.FileInfo, fullPath string) {

@@ -26,11 +26,14 @@ Using lib from `github.com/mrido10/path-listener/service`
 import pathListener "github.com/mrido10/path-listener/service"
 
 func main() {
-  var listPath = []pathListener.ListPath {
-    {FuncProcessing: readFile, PathOrigin: "C:/testing/folder1", PathDone: "C:/testing/folder1/done", AutoMoveToDone: true},
-    {FuncProcessing: readFile, PathOrigin: "C:/testing/folder2", AutoMoveToDone: true},
-  } 
-  pathListener.Listen(listPath, 5 * time.Second).Loop()
+  var listener = pathListener.Path {
+		List: []pathListener.ListPath {
+			{FuncProcessing: readFile, PathOrigin: "C:/testing/folder1", PathDone: "C:/testing/folder1/done", AutoMoveToDone: true},
+			{FuncProcessing: readFile, PathOrigin: "C:/testing/folder2", AutoMoveToDone: true},
+		},
+		TimeWait: 5 * time.Second,
+	}
+	pathListener.Listen(listener).Loop()
 }
 ```
 |Field|Info|
