@@ -1,27 +1,25 @@
 package service
 
 import (
-	"log"
-    "io/fs"
-    "io/ioutil"
+	"errors"
+	"io/ioutil"
 
-    "github.com/mrido10/path-listener/util"
+	"github.com/mrido10/path-listener/util"
 )
 
-func (p Path) validateField(pth ListPath) []fs.FileInfo{
+func (p Path) validateField(pth ListPath) error {
 	if pth.FuncProcessing == nil {
-        log.Fatal("- Function ListPath.FuncProcessed can't nil")
+        return errors.New("Function ListPath.FuncProcessed can't nil")
     }
     if pth.PathOrigin == "" {
-        log.Fatal("- Directory ListPath.Origin can't empty")
+        return errors.New("Directory ListPath.Origin can't empty")
     }
 
-    files, err := ioutil.ReadDir(pth.PathOrigin)
+    _, err := ioutil.ReadDir(pth.PathOrigin)
     if err != nil {
-		log.Fatal("ListPath.PathOrigin" + err.Error()) 
+		return errors.New("ListPath.PathOrigin" + err.Error()) 
     }
-
-    return files
+    return nil
 }
 
 func (p Path) additionalSet(pth *ListPath) {

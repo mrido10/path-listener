@@ -1,8 +1,9 @@
 package util
 
 import (
-	"fmt"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func MoveFile(origin, dest, fileName string) error {
@@ -11,7 +12,7 @@ func MoveFile(origin, dest, fileName string) error {
 	}
 	err := os.Rename(origin + fileName, dest + fileName)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Error(err.Error())
 		return err
 	}
 	return nil
