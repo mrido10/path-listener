@@ -31,7 +31,7 @@ import pathListener "github.com/mrido10/path-listener/service"
 
 func main() {
   var listener = pathListener.Path {
-	  List: []pathListener.ListPath {
+    List: []pathListener.ListPath {
       {FuncProcessing: readFile, PathOrigin: "C:/testing/folder1", PathDone: "C:/testing/folder1/done", AutoMoveToDone: true},
       {FuncProcessing: readFile, PathOrigin: "C:/testing/folder2", AutoMoveToDone: true},
     },

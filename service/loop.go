@@ -34,13 +34,16 @@ type _listPath struct {
 
 type plainText log.TextFormatter
 
-var Listen = func(pth Path) *Path {
-	logrusInit()
-	if pth.TimeWait.Seconds() < 5 {
-		pth.TimeWait = 5 * time.Second
+var (
+	Listen = func(pth Path) *Path {
+		logrusInit()
+		if pth.TimeWait.Seconds() < 5 {
+			pth.TimeWait = 5 * time.Second
+		}
+		return &pth
 	}
-	return &pth
-}
+	MapPathOrigin = make(map[string]string)
+)
 
 func (p Path) Loop() {
 	runtime.GOMAXPROCS(2)
@@ -59,7 +62,7 @@ func (p Path) Loop() {
 
 func (p *Path) validateAndSetPathDone() {
 	for k, v := range p.List {
-		err := p.validateField(v)
+		err := p.validateField(v, k)
 		if err != nil {
 			log.Error(err.Error())
 			os.Exit(2)
@@ -73,7 +76,7 @@ func (p Path) printConfigurations() {
 	var list []_listPath
 	for _, v := range p.List {
 		list = append(list, _listPath{
-			FuncProcessing: runtime.FuncForPC(reflect.ValueOf(v.FuncProcessing).Pointer()).Name(),
+			FuncProcessing: runtime.FuncForPC(reflect.ValueOf(v.FuncProcessing).Pointer()).Name() + "(fs.FileInfo,string) ",
 			ListPath: ListPath{
 				PathOrigin: v.PathOrigin,
 				PathDone: v.PathDone,
