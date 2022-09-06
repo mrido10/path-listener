@@ -1,27 +1,33 @@
 package service
 
 import (
-	"log"
-    "io/fs"
-    "io/ioutil"
+	"fmt"
+	"io/ioutil"
+	"reflect"
+	"runtime"
 
-    "github.com/mrido10/path-listener/util"
+	"github.com/mrido10/path-listener/util"
 )
 
-func (p Path) validateField(pth ListPath) []fs.FileInfo{
+func (p Path) validateField(pth ListPath, arrIdx int) error {
 	if pth.FuncProcessing == nil {
-        log.Fatal("- Function ListPath.FuncProcessed can't nil")
+        return fmt.Errorf("function List[%d].ListPath.FuncProcessed can't nil", arrIdx)
     }
     if pth.PathOrigin == "" {
-        log.Fatal("- Directory ListPath.Origin can't empty")
+        return fmt.Errorf("directory List[%d].ListPath.Origin can't empty", arrIdx)
     }
 
-    files, err := ioutil.ReadDir(pth.PathOrigin)
+    _, err := ioutil.ReadDir(pth.PathOrigin)
     if err != nil {
-		log.Fatal("ListPath.PathOrigin" + err.Error()) 
+		return fmt.Errorf("directory List[%d].ListPath.PathOrigin %s", arrIdx, err.Error()) 
     }
 
-    return files
+    if MapPathOrigin[pth.PathOrigin] != "" {
+        return fmt.Errorf("directory List[%d].ListPath.PathOrigin already used in func %s", arrIdx, MapPathOrigin[pth.PathOrigin])
+    }
+    MapPathOrigin[pth.PathOrigin] = fmt.Sprintf("%s(fs.FileInfo,string) List[%d].ListPath.PathOrigin", 
+        runtime.FuncForPC(reflect.ValueOf(pth.FuncProcessing).Pointer()).Name(), arrIdx)
+    return nil
 }
 
 func (p Path) additionalSet(pth *ListPath) {

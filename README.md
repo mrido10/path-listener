@@ -1,5 +1,9 @@
 Go code to auto process files in directories 
 
+## Feature
+- Listen directories
+- Delete files in `/done/` folder by scheduler
+
 ## Install
 ```bash
 go get -u github.com/mrido10/path-listener
@@ -11,7 +15,7 @@ The function must have 2 params `(file fs.FileInfo, fullPath string)`
 ```go
 func readFile(file fs.FileInfo, fullPath string) {
   body, _ := ioutil.ReadFile(fullPath)
-  fmt.Println(string(body))
+  log.Info(string(body))
 }
 ```
 |Param|Info|
@@ -26,11 +30,16 @@ Using lib from `github.com/mrido10/path-listener/service`
 import pathListener "github.com/mrido10/path-listener/service"
 
 func main() {
-  var listPath = []pathListener.ListPath {
-    {FuncProcessing: readFile, PathOrigin: "C:/testing/folder1", PathDone: "C:/testing/folder1/done", AutoMoveToDone: true},
-    {FuncProcessing: readFile, PathOrigin: "C:/testing/folder2", AutoMoveToDone: true},
-  } 
-  pathListener.Listen(listPath, 5 * time.Second).Loop()
+  var listener = pathListener.Path {
+    List: []pathListener.ListPath {
+      {FuncProcessing: readFile, PathOrigin: "C:/testing/folder1", PathDone: "C:/testing/folder1/done", AutoMoveToDone: true},
+      {FuncProcessing: readFile, PathOrigin: "C:/testing/folder2", AutoMoveToDone: true},
+    },
+    TimeWait: 5 * time.Second,
+    AutoDeleteFilesDone: true,
+    CronExp: "22 23 * * *",
+  }
+  pathListener.Listen(listener).Loop()
 }
 ```
 |Field|Info|
@@ -38,6 +47,6 @@ func main() {
 |`FuncProcessing`|function to process files|
 |`PathOrigin`|directory want to auto process files|
 |`PathDone`|directory files moved after processed|
-||default auto created folder `/done` into `PathOrigin`|
+||default auto created folder `/done/` into `PathOrigin`|
 |`AutoMoveToDone`|if `true` files auto move after processed|
 ||default `false`|
