@@ -56,6 +56,7 @@ func (p Path) Loop() {
 		for _, path := range p.List {
 			go p.readPath(path)
 		}
+		log.Println(mapFileProcessed)
 		time.Sleep(p.TimeWait)
 	}
 }
